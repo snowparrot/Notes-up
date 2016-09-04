@@ -113,14 +113,18 @@ public class ENotes.FileManager : Object {
             return null;
         }
 
-        var op = new WebKit.PrintOperation (ENotes.Viewer.get_instance ());
-        var settings = new Gtk.PrintSettings ();
-        settings.set_printer ("Print to File");
+        Timeout.add (3000, () => {
+            var op = new WebKit.PrintOperation (ENotes.Viewer.get_instance ());
+            var settings = new Gtk.PrintSettings ();
+            settings.set_printer ("Print to File");
 
-        settings[Gtk.PRINT_SETTINGS_OUTPUT_URI] = "file://" + file.get_path ();
-        op.set_print_settings (settings);
+            settings[Gtk.PRINT_SETTINGS_OUTPUT_URI] = "file://" + file.get_path ();
+            op.set_print_settings (settings);
 
-        op.print ();
+            op.print ();
+            stderr.printf ("Printing...\n");
+            return false;
+        });
 
         return file;
     }
