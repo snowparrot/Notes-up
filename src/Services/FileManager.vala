@@ -106,12 +106,12 @@ public class ENotes.FileManager : Object {
         else
             file = File.new_for_path (file_path);
 
-        try { // TODO: we have to write an empty file so we can get file path
-            write_file (file, "");
-        } catch (Error e) {
-            warning ("Could not write initial PDF file: %s", e.message);
-            return null;
-        }
+    //    try { // TODO: we have to write an empty file so we can get file path
+    //        write_file (file, "Printing to file failed... :( ");
+    //    } catch (Error e) {
+    //        warning ("Could not write initial PDF file: %s", e.message);
+    //        return null;
+    //    }
 
         Timeout.add (3000, () => {
             var op = new WebKit.PrintOperation (ENotes.Viewer.get_instance ());
