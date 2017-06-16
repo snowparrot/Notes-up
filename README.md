@@ -25,6 +25,10 @@ As a computer engineer, I've been writing my school notes using just a text edit
 
 You can also view the full [changelog here](changelog.md)
 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mzSPGkOyzW8" frameborder="0" allowfullscreen></iframe>
+
+
 ## Donations
 If you liked _Notes-up_, and would like to support it's development of this app and more, consider [buying me a coffee](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYD9ZJK6ZFUDQ) :) 
 
