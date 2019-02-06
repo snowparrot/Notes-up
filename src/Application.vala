@@ -52,6 +52,7 @@ public enum ENotes.Key {
 }
 
 namespace ENotes {
+    public unowned ENotes.Application app;
     public ENotes.Services.Settings settings;
     public ENotes.Window window;
     public string NOTES_DB;
@@ -68,30 +69,26 @@ public class ENotes.Application : Granite.Application {
     construct {
         application_id = "com.github.philip-scott.notes-up";
         program_name = PROGRAM_NAME;
-        app_years = "2015-2017";
         exec_name = TERMINAL_NAME;
         app_launcher = "com.github.philip-scott.notes-up";
 
         build_version = Constants.VERSION;
-        app_icon = "com.github.philip-scott.notes-up";
-        main_url = "https://github.com/Philip-Scott/Notes-up/";
-        bug_url = "https://github.com/Philip-Scott/Notes-up/issues";
-        help_url = "https://github.com/Philip-Scott/Notes-up/";
-        translate_url = "https://github.com/Philip-Scott/Notes-up/tree/master/po";
-        about_authors = {"Felipe Escoto <felescoto95@hotmail.com>", null};
-        about_translators = _("translator-credits");
-
-        about_license_type = Gtk.License.GPL_3_0;
     }
 
     public override void activate () {
         if (!running) {
+            ENotes.app = this;
             settings = ENotes.Services.Settings.get_instance ();
 
+            var notes_path = Path.build_filename (GLib.Environment.get_home_dir (), "/.local/share/notes-up/");
+            var notes_dir = File.new_for_path (notes_path);
+
+            if (!notes_dir.query_exists ()) {
+                DirUtils.create_with_parents (notes_path, 0766);
+            }
+
             if (settings.notes_database == "") { // Init databases
-                var notes_dir = GLib.Environment.get_home_dir () + "/.local/share/notes-up/";
-                DirUtils.create_with_parents (notes_dir, 0766);
-                settings.notes_database = notes_dir + "NotesUp.db";
+                settings.notes_database = Path.build_filename (notes_path, "NotesUp.db");
             }
 
             ENotes.NOTES_DIR = settings.notes_location;

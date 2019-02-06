@@ -54,7 +54,7 @@ public class ENotes.Editor : Gtk.Box {
         set {
             if (value) {
                 try {
-                    var last_language = settings.get_instance ().spellcheck_language;
+                    var last_language = Services.Settings.get_instance ().spellcheck_language;
                     bool language_set = false;
                     var language_list = GtkSpell.Checker.get_language_list ();
                     foreach (var element in language_list) {
@@ -102,6 +102,7 @@ public class ENotes.Editor : Gtk.Box {
             save_file ();
             return true;
         });
+        new WordWrapper(); // used to enforce initialization of static members
     }
 
     private void build_ui () {
@@ -117,7 +118,7 @@ public class ENotes.Editor : Gtk.Box {
 
         code_buffer.changed.connect (trigger_changed);
 
-        code_view.pixels_above_lines = 5;
+        code_view.pixels_below_lines = 6;
         code_view.wrap_mode = Gtk.WrapMode.WORD;
         code_view.show_line_numbers = true;
 
@@ -128,7 +129,7 @@ public class ENotes.Editor : Gtk.Box {
         editor_and_help.add (scroll_box);
 
         spell = new GtkSpell.Checker ();
-        spellcheck = settings.get_instance ().spellcheck;
+        spellcheck = Services.Settings.get_instance ().spellcheck;
 
         code_view.populate_popup.connect ((menu) => {
             menu.selection_done.connect (() => {
@@ -137,7 +138,7 @@ public class ENotes.Editor : Gtk.Box {
                 if (selected != null) {
                     try {
                         spell.set_language (selected.label);
-                        settings.get_instance ().spellcheck_language = selected.label;
+                        Services.Settings.get_instance ().spellcheck_language = selected.label;
                     } catch (Error e) {}
                 }
             });
@@ -171,9 +172,26 @@ public class ENotes.Editor : Gtk.Box {
     private Gtk.Box build_toolbar () {
         var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 
-        bold_button = new ENotes.ToolbarButton ("format-text-bold-symbolic", "**", "**", _("Add bold to text") + Key.BOLD.to_string (), code_buffer);
-        italics_button = new ENotes.ToolbarButton ("format-text-italic-symbolic", "_", "_", _("Add italic to text") + Key.ITALICS.to_string (), code_buffer);
-        strike_button = new ENotes.ToolbarButton ("format-text-strikethrough-symbolic", "~~", "~~", _("Strikethrough text") + Key.STRIKE.to_string (), code_buffer);
+        bold_button = new ENotes.ToolbarButton (
+            "format-text-bold-symbolic",
+            "**", "**",
+            Granite.markup_accel_tooltip (app.get_accels_for_action ("win.bold-action"), _("Add bold to text")),
+            code_buffer
+        );
+
+        italics_button = new ENotes.ToolbarButton (
+            "format-text-italic-symbolic",
+            "_", "_",
+            Granite.markup_accel_tooltip (app.get_accels_for_action ("win.italics-action"), _("Add italic to text")),
+            code_buffer
+        );
+
+        strike_button = new ENotes.ToolbarButton (
+            "format-text-strikethrough-symbolic",
+            "~~", "~~",
+            Granite.markup_accel_tooltip (app.get_accels_for_action ("win.strike-action"), _("Strikethrough text")),
+            code_buffer
+        );
 
         var quote_button = new ENotes.ToolbarButton ("format-indent-less-rtl", "> ", "", _("Insert a quote"), code_buffer);
         var code_button = new ENotes.ToolbarButton ("system-run", "`", "`", _("Insert code"), code_buffer);
@@ -187,12 +205,12 @@ public class ENotes.Editor : Gtk.Box {
         var separator1 = new Gtk.Separator (Gtk.Orientation.VERTICAL);
         var separator2 = new Gtk.Separator (Gtk.Orientation.VERTICAL);
         var separator3 = new Gtk.Separator (Gtk.Orientation.VERTICAL);
-        separator1.margin_left = 4;
-        separator2.margin_left = 4;
-        separator3.margin_left = 4;
-        separator1.margin_right = 4;
-        separator2.margin_right = 4;
-        separator3.margin_right = 4;
+        separator1.margin_start = 4;
+        separator2.margin_start = 4;
+        separator3.margin_start = 4;
+        separator1.margin_end = 4;
+        separator2.margin_end = 4;
+        separator3.margin_end = 4;
 
         box.add (bold_button);
         box.add (italics_button);
@@ -251,6 +269,7 @@ public class ENotes.Editor : Gtk.Box {
                 current_page.data = this.get_text ();
                 current_page.html_cache = "";
                 PageTable.get_instance ().save_page (current_page);
+                ViewEditStack.get_instance ().refresh_headerbar_title ();
             }
         }
     }

@@ -62,25 +62,31 @@ public class ENotes.Headerbar : Gtk.HeaderBar {
         mode_button.append_text (_("Edit"));
         mode_button.valign = Gtk.Align.CENTER;
 
-        mode_button.set_tooltip_text (_("Change mode") + Key.CHANGE_MODE.to_string ());
+        mode_button.set_tooltip_markup (Granite.markup_accel_tooltip (app.get_accels_for_action ("win.change-mode"), _("Change mode")));
 
         create_menu ();
 
         var search_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        search_box.halign = Gtk.Align.END;
+        search_box.valign = Gtk.Align.CENTER;
+
         search_entry = new Gtk.SearchEntry();
         search_entry.editable = true;
         search_entry.visibility = true;
         search_entry.expand = true;
         search_entry.max_width_chars = 30;
-        search_entry.margin_right = 12;
+        search_entry.margin_end = 12;
 
         search_entry_revealer = new Gtk.Revealer();
+        search_entry_revealer.valign = Gtk.Align.CENTER;
+
         search_button_revealer = new Gtk.Revealer();
         search_entry_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_LEFT;
         search_button_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_LEFT;
 
         search_button = new Gtk.Button.from_icon_name ("edit-find-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
-        search_button.tooltip_text = (_("Search your current notebook") + Key.FIND.to_string ());
+        search_button.set_tooltip_markup (Granite.markup_accel_tooltip (app.get_accels_for_action ("win.find-action"), _("Search your current notebook")));
+
         search_button.clicked.connect(show_search);
 
         search_button_revealer.add(search_button);
@@ -156,6 +162,8 @@ public class ENotes.Headerbar : Gtk.HeaderBar {
         } else {
             this.title = "";
         }
+
+        this.title = this.title.replace ("&amp;", "&");
     }
 
     private void connect_signals () {

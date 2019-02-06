@@ -20,18 +20,23 @@
 */
 
 public class ENotes.PageItem : Gtk.ListBoxRow {
-    public ENotes.Page page;
+    public ENotes.Page page { get; construct set; }
 
     private Gtk.Grid grid;
     private Gtk.Label line1;
     private Gtk.Label line2;
 
     public PageItem (ENotes.Page page) {
-        this.page = page;
-        build_ui ();
+        Object (page: page);
     }
 
-    private void build_ui () {
+    private static Trash trash_instance;
+
+    static construct {
+        trash_instance = Trash.get_instance ();
+    }
+
+    construct {
         set_activatable (true);
 
         grid = new Gtk.Grid ();
@@ -44,14 +49,14 @@ public class ENotes.PageItem : Gtk.ListBoxRow {
         line1.ellipsize = Pango.EllipsizeMode.END;
         ((Gtk.Misc) line1).xalign = 0;
         line1.margin_top = 4;
-        line1.margin_left = 8;
-        line1.margin_right = 8;
+        line1.margin_start = 8;
+        line1.margin_end = 8;
         line1.margin_bottom = 4;
 
         line2 = new Gtk.Label ("");
         line2.halign = Gtk.Align.START;
-        line2.margin_left = 8;
-        line2.margin_right = 8;
+        line2.margin_start = 8;
+        line2.margin_end = 8;
         line2.margin_bottom = 4;
         line2.use_markup = true;
         line2.set_line_wrap (true);
@@ -72,13 +77,11 @@ public class ENotes.PageItem : Gtk.ListBoxRow {
         this.show_all ();
     }
 
-    public void trash_page () {
-        this.destroy ();
-    }
-
     public void load_data () {
-        this.line2.label = page.subtitle;
-        this.line1.label = "<b>" + page.name + "</b>";
+        line2.label = page.subtitle;
+        line1.label = "<b>" + page.name + "</b>";
+
+        line1.sensitive = !trash_instance.is_page_trashed (page);
+        line2.sensitive = line1.sensitive;
     }
 }
-

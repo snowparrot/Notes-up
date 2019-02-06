@@ -1,26 +1,6 @@
-project(notes-up)
+project(com.github.philip-scott.notes-up)
 
 cmake_minimum_required(VERSION 2.6)
-
-# build the markdown lib
-include(ExternalProject)
-set(DISCOUNT_DEP_PATH ${CMAKE_SOURCE_DIR}/deps/discount)
-set(DISCOUNT_LIB_PATH ${CMAKE_BINARY_DIR}/libmarkdown.a)
-set(DISCOUNT_INCLUDE_PATH ${DISCOUNT_DEP_PATH})
-
-ExternalProject_Add(discount
-  PREFIX ${DISCOUNT_DEP_PATH}
-  SOURCE_DIR ${DISCOUNT_DEP_PATH}
-  CONFIGURE_COMMAND
-      ${DISCOUNT_DEP_PATH}/configure.sh --src=${DISCOUNT_DEP_PATH}
-                                        --with-fenced-code
-                                        --prefix=${CMAKE_BINARY_DIR}
-                                        --libdir=${CMAKE_BINARY_DIR}
-  BUILD_COMMAND make install
-  BUILD_IN_SOURCE 1
-)
-
-include_directories(${DISCOUNT_INCLUDE_PATH})
 
 # build UI lib
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -31,7 +11,7 @@ add_definitions(-w)
 find_package(PkgConfig)
 
 pkg_check_modules(DEPS REQUIRED
-  granite>=0.3
+  granite>=5.2.0
   gee-0.8
   gtksourceview-3.0>=3.10
   gthread-2.0
@@ -39,6 +19,7 @@ pkg_check_modules(DEPS REQUIRED
   webkit2gtk-4.0
   sqlite3>=3.5.9
   gtkspell3-3.0
+  libmarkdown
 )
 
 set (VALA_DEPS
@@ -48,8 +29,8 @@ set (VALA_DEPS
  gtk+-3.0
  webkit2gtk-4.0
  sqlite3
- discount
  gtkspell3-3.0
+ libmarkdown
 )
 
 add_definitions(${DEPS_CFLAGS})
@@ -69,7 +50,7 @@ set (generated_resources ${generated_resource})
 
 find_package(Vala REQUIRED)
 include(ValaVersion)
-ensure_vala_version("0.26.0" MINIMUM)
+ensure_vala_version("0.39.0" MINIMUM)
 
 set (DATADIR "${CMAKE_INSTALL_PREFIX}/share")
 set (PKGDATADIR "${DATADIR}/notes-up")
@@ -77,7 +58,6 @@ set (GETTEXT_PACKAGE "notes-up")
 set (RELEASE_NAME "TARS")
 set (VERSION "1.3")
 set (VERSION_INFO "Release")
-set (CMAKE_C_FLAGS "-ggdb")
 set (PREFIX ${CMAKE_INSTALL_PREFIX})
 set (DOLLAR "$")
 
@@ -123,17 +103,19 @@ vala_precompile(VALA_C
 
   src/Widgets/Sidebar/Sidebar.vala
   src/Widgets/Sidebar/SidebarItem.vala
+  src/Widgets/Sidebar/NotebookList.vala
   src/Widgets/Sidebar/NotebookItem.vala
   src/Widgets/Sidebar/BookmarkItem.vala
   src/Widgets/Sidebar/TrashItem.vala
 
   src/Widgets/Dialogs/NewNotebookDialog.vala
   src/Widgets/Dialogs/PreferencesDialog.vala
-  
+  src/Widgets/Dialogs/NotebookListDialog.vala
+
   src/Styles/air.vala
   src/Styles/elementary.vala
   src/Styles/modest.vala
-  
+
   src/Services/Bookmark.vala
   src/Services/FileManager.vala
   src/Services/Notebook.vala
@@ -142,7 +124,8 @@ vala_precompile(VALA_C
   src/Services/Settings.vala
   src/Services/Trash.vala
   src/Services/DatabaseTable.vala
-  
+  src/Services/WordWrapper.vala
+
   src/Plugins/Manager.vala
   src/Plugins/Plugin.vala
   src/Plugins/Break.vala
@@ -157,16 +140,10 @@ OPTIONS
   ${GLOBAL_VALAC_OPTIONS}
 )
 
-add_executable(notes-up ${VALA_C} ${generated_resources})
+add_executable(com.github.philip-scott.notes-up ${VALA_C} ${generated_resources})
 
-target_link_libraries(notes-up
-  ${DISCOUNT_LIB_PATH})
 
-add_dependencies(notes-up
-  discount
-)
-
-install(TARGETS notes-up RUNTIME
+install(TARGETS com.github.philip-scott.notes-up RUNTIME
   DESTINATION bin)
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.philip-scott.notes-up.appdata.xml
@@ -179,8 +156,11 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.philip-scott.notes-up.
 file(GLOB assets "${CMAKE_CURRENT_SOURCE_DIR}/data/assets/**")
 install (FILES ${assets}
   DESTINATION ${DATADIR}/notes-up/)
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.philip-scott.notes-up.svg"
-  DESTINATION share/icons/hicolor/scalable/apps)
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/data/icons/48/com.github.philip-scott.notes-up.svg"
+  DESTINATION share/icons/hicolor/48x48/apps)
+
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/data/icons/64/com.github.philip-scott.notes-up.svg"
+  DESTINATION share/icons/hicolor/64x64/apps)
 
 # App DATA
 #configure_file_translation (io.github.notes-up.xml.in ${CMAKE_CURRENT_BINARY_DIR}/io.github.notes-up.xml ${CMAKE_SOURCE_DIR}/po/)

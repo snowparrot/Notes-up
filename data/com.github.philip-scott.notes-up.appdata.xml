@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright (c) 2017 Felipe Escoto (https://github.com/Philip-Scott/Notes-up) -->
 <component type="desktop">
-  <id>com.github.philip-scott.notes-up.desktop</id>
+  <id>com.github.philip-scott.notes-up</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Notes-Up</name>
@@ -18,9 +18,54 @@
      </ul>
     </description>
   <provides>
-    <binary>notes-up</binary>
+    <binary>com.github.philip-scott.notes-up</binary>
   </provides>
   <releases>
+    <release version="1.6.3" date="2018-12-21">
+      <description>
+        <p>Quick Bug Fix</p>
+        <ul>
+          <li>Fixed problem where the notes folder would not be re-created if it was deleted, preventing the app from opening again...</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.6.2" date="2018-12-04">
+      <description>
+        <p>Juno Papercuts</p>
+        <ul>
+          <li>Tooltips with shortcuts now use the new style</li>
+          <li>Fixed a problem where Notes-Up would forget the sidebar size.</li>
+          <li>The styles on the HelpBox have been updated for Juno</li>
+          <li>If you delete the empty page created when you make a notebook, it will not re-appear</li>
+          <li>And other small bug fixes</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.6.1" date="2018-09-23">
+      <description>
+        <p>A Very Juno Update</p>
+        <ul>
+          <li>Notes-Up is now available in elementary OS Juno!</li>
+          <li>Icon updated to use the new elementary color palette</li>
+          <li>Trashed pages show up in the pages list grayed out</li>
+          <li>Added translations for Italian and Japanese</li>
+          <li>Code cleanups and more!</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.5.0" date="2017-12-25">
+      <description>
+        <p>The Community Update</p>
+        <ul>
+          <li>Pages are better summarized when they have markdown symbols</li>
+          <li>When applying styles to the text, it will automatically wrap around it properly</li>
+          <li>You can now move Notebooks</li>
+          <li>Fixed some errors from exporting, and some other bugs</li>
+          <li>Notes-Up is now translated to Lithuanian, French, Portuguese and Czech!</li>
+          <li>A huge thanks to the translators, and the new contributors! You guys rock!</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.6" date="2017-08-16">
       <description>
         <p>Spell Checking</p>
@@ -53,5 +98,35 @@
   <custom>
     <value key="x-appcenter-color-primary">#D0F3FF</value>
     <value key="x-appcenter-color-primary-text">#004B66</value>
+    <value key="x-appcenter-suggested-price">12</value>
   </custom>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
 </component>

@@ -100,31 +100,35 @@ public class ENotes.PagesList : Gtk.Box {
         var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 
         plus_button = new Gtk.Button.from_icon_name ("document-new-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+
+        plus_button.set_tooltip_markup (Granite.markup_accel_tooltip (app.get_accels_for_action ("win.new-action"), _("New Page")));
+        plus_button.get_style_context ().add_class ("flat");
+        plus_button.can_focus = false;
+
         minus_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+        minus_button.set_tooltip_text (_("Delete Page"));
+        minus_button.get_style_context ().add_class ("flat");
+        minus_button.halign = Gtk.Align.END;
+        minus_button.no_show_all = true;
+        minus_button.can_focus = false;
+        minus_button.visible = false;
+
         notebook_name = new Gtk.Label ("");
         page_total = new Gtk.Label ("");
         separator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
 
-        minus_button.get_style_context ().add_class ("flat");
-        plus_button.get_style_context ().add_class ("flat");
-
         notebook_name.halign = Gtk.Align.START;
         page_total.halign = Gtk.Align.END;
-        minus_button.halign = Gtk.Align.END;
-        minus_button.visible = false;
+
         separator.visible = false;
         notebook_name.hexpand = true;
-        minus_button.can_focus = false;
-        plus_button.can_focus = false;
-        minus_button.no_show_all = true;
         separator.no_show_all = true;
-        plus_button.set_tooltip_text (_("New Page") + Key.NEW_PAGE.to_string ());
 
         notebook_name.ellipsize = Pango.EllipsizeMode.END;
         notebook_name.get_style_context ().add_class ("h4");
-        notebook_name.margin_left = 6;
-        notebook_name.margin_right = 6;
-        page_total.margin_right = 6;
+        notebook_name.margin_start = 6;
+        notebook_name.margin_end = 6;
+        page_total.margin_end = 6;
 
         box.add (notebook_name);
         box.add (page_total);
@@ -155,7 +159,7 @@ public class ENotes.PagesList : Gtk.Box {
         }
     }
 
-    private void refresh () {
+    public void refresh () {
         load_pages (current_notebook);
     }
 
@@ -187,12 +191,6 @@ public class ENotes.PagesList : Gtk.Box {
 
         foreach (ENotes.Page page in pages) {
             new_page (page);
-        }
-
-        bool has_pages = added_pages.size > 0;
-
-        if (!has_pages) {
-            new_blank_page ();
         }
 
         toolbar.set_sensitive (true);
